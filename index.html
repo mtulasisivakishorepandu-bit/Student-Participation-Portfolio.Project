@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Student Portfolio | Activity & Achievement Hub</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">✦</div>
+        <div><strong>Student Portfolio</strong><small>Achievement hub</small></div>
+      </div>
+
+      <div class="nav-label">Workspace</div>
+      <nav class="nav">
+        <button class="active" data-page="dashboard"><span class="ico">▦</span><span>Dashboard</span></button>
+        <button data-page="portfolio"><span class="ico">▤</span><span>Portfolio</span></button>
+        <button data-page="gallery"><span class="ico">▧</span><span>Photo Gallery</span></button>
+        <button data-page="analytics"><span class="ico">◫</span><span>Insights &amp; Analytics</span></button>
+      </nav>
+
+      <div class="nav-label">Data</div>
+      <nav class="nav">
+        <button id="exportBtn"><span class="ico">⇩</span><span>Export backup</span></button>
+        <button id="importBtn"><span class="ico">⇧</span><span>Import backup</span></button>
+        <input class="import-input" type="file" id="importFile" accept=".json,application/json">
+      </nav>
+
+      <div class="sidebar-bottom">
+        <strong>✧ Keep building your story</strong>
+        Every experience counts. Capture your work, celebrate your milestones and grow your portfolio.
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="heading">
+          <h1 id="pageTitle">Your journey, in one place.</h1>
+          <p id="pageSubtitle">Capture experiences. Celebrate progress. Build your future.</p>
+        </div>
+        <div class="top-right">
+          <div class="profile-chip">
+            <div class="avatar" id="avatarInitial">S</div>
+            <span id="profileLabel">Student</span>
+          </div>
+          <button class="btn primary" id="addBtn">＋ Add activity</button>
+        </div>
+      </header>
+
+      <section class="pages active" id="dashboard">
+        <div class="hero">
+          <div class="hero-text">
+            <h2>Your experiences tell your story.</h2>
+            <p>Keep track of workshops, competitions, leadership, volunteering and every milestone along the way.</p>
+            <button class="btn" onclick="openModal()">＋ Record an experience</button>
+          </div>
+          <div class="hero-art">🎓</div>
+        </div>
+
+        <div class="stats">
+          <div class="stat">
+            <div class="stat-top">Portfolio activities <div class="stat-icon">📚</div></div>
+            <h3 id="totalStat">0</h3><small>All recorded experiences</small>
+          </div>
+          <div class="stat">
+            <div class="stat-top">Completed <div class="stat-icon">🏅</div></div>
+            <h3 id="completedStat">0</h3><small>Finished milestones</small>
+          </div>
+          <div class="stat">
+            <div class="stat-top">In progress <div class="stat-icon">⏳</div></div>
+            <h3 id="ongoingStat">0</h3><small>Currently underway</small>
+          </div>
+          <div class="stat">
+            <div class="stat-top">Categories <div class="stat-icon">✦</div></div>
+            <h3 id="categoryStat">0</h3><small>Areas of participation</small>
+          </div>
+        </div>
+
+        <div class="panels">
+          <div class="panel">
+            <div class="panel-head">
+              <div><h3>Recent experiences</h3><p>Your latest portfolio entries</p></div>
+              <button class="btn subtle" onclick="switchPage('portfolio')">View portfolio →</button>
+            </div>
+            <div class="panel-body">
+              <div class="recent-list" id="recentList"></div>
+              <div class="empty" id="recentEmpty">
+                <div class="empty-icon">🌱</div>
+                <strong>Your story starts here</strong>
+                Record your first activity to bring your portfolio to life.
+              </div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head">
+              <div><h3>Progress snapshot</h3><p>Activity status at a glance</p></div>
+            </div>
+            <div class="panel-body" id="progressSnapshot">
+              <p class="hint">Add activities to see your progress.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="pages" id="portfolio">
+        <div class="panel">
+          <div class="panel-head">
+            <div><h3>My participation portfolio</h3><p>All activities, achievements and experiences</p></div>
+          </div>
+          <div class="toolbar">
+            <div class="search">
+              <span>⌕</span>
+              <input id="searchInput" placeholder="Search title, organizer or description…">
+            </div>
+            <select id="categoryFilter">
+              <option value="">All categories</option>
+              <option>Academic</option><option>Technical</option><option>Sports</option>
+              <option>Cultural</option><option>Volunteer</option><option>Leadership</option><option>Other</option>
+            </select>
+            <select id="statusFilter">
+              <option value="">All statuses</option>
+              <option>Completed</option><option>Ongoing</option><option>Planned</option>
+            </select>
+            <select id="sortFilter">
+              <option value="newest">Newest first</option>
+              <option value="oldest">Oldest first</option>
+              <option value="az">Name A–Z</option>
+            </select>
+          </div>
+          <div class="portfolio-grid" id="portfolioGrid"></div>
+          <div class="empty" id="portfolioEmpty">
+            <div class="empty-icon">🔎</div>
+            <strong>No activities found</strong>
+            Try changing your filters or add a new activity.
+          </div>
+          <div class="panel-head" style="border-top:1px solid var(--line)">
+            <p id="recordCount">0 records</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="pages" id="gallery">
+        <div class="panel">
+          <div class="panel-head">
+            <div><h3>Memories &amp; certificates</h3><p>Visual collection of uploaded activity photos and certificates</p></div>
+          </div>
+          <div class="gallery-grid" id="galleryGrid"></div>
+          <div class="empty" id="galleryEmpty">
+            <div class="empty-icon">🖼️</div>
+            <strong>Your gallery is waiting</strong>
+            Add activity photos or certificates to see them here.
+          </div>
+        </div>
+      </section>
+
+      <section class="pages" id="analytics">
+        <div class="analytics">
+          <div class="panel">
+            <div class="panel-head"><div><h3>Category distribution</h3><p>How your experiences are spread across areas</p></div></div>
+            <div class="panel-body" id="categoryBars"></div>
+          </div>
+          <div class="panel">
+            <div class="panel-head"><div><h3>Status overview</h3><p>Completion breakdown</p></div></div>
+            <div class="panel-body" id="statusOverview"></div>
+          </div>
+          <div class="panel">
+            <div class="panel-head"><div><h3>Portfolio summary</h3></div></div>
+            <div class="panel-body" id="summaryText"></div>
+          </div>
+          <div class="panel">
+            <div class="panel-head"><div><h3>Portfolio tips</h3></div></div>
+            <div class="panel-body hint">
+              • Include a concise description of what you did.<br><br>
+              • Keep dates and organizers accurate.<br><br>
+              • Add photos or certificates when available.<br><br>
+              • Update the status as your activities progress.<br><br>
+              • Export a backup periodically.
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+      <div class="modal-head">
+        <h3 id="modalTitle">Add experience</h3>
+        <button class="close" id="closeModal">×</button>
+      </div>
+
+      <form class="form" id="activityForm">
+        <input type="hidden" id="editId">
+
+        <div class="field">
+          <label for="activityName">Activity / achievement title *</label>
+          <input id="activityName" maxlength="100" required placeholder="e.g. National Hackathon">
+        </div>
+
+        <div class="form-grid">
+          <div class="field">
+            <label for="category">Category *</label>
+            <select id="category" required>
+              <option value="">Choose category</option>
+              <option>Academic</option><option>Technical</option><option>Sports</option>
+              <option>Cultural</option><option>Volunteer</option><option>Leadership</option><option>Other</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="activityDate">Date *</label>
+            <input type="date" id="activityDate" required>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div class="field">
+            <label for="organizer">Organizer / institution</label>
+            <input id="organizer" maxlength="100" placeholder="College, organization…">
+          </div>
+          <div class="field">
+            <label for="status">Status *</label>
+            <select id="status" required>
+              <option>Completed</option><option>Ongoing</option><option>Planned</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="description">Description / role / takeaway</label>
+          <textarea id="description" maxlength="700" placeholder="What did you do? What did you learn? Any result or award?"></textarea>
+        </div>
+
+        <div class="field">
+          <label for="activityImage">Photo or certificate</label>
+          <div class="upload">
+            <input type="file" id="activityImage" accept="image/*">
+            <div class="hint">Image uploads are resized for browser storage. JPG, PNG or WebP recommended.</div>
+            <img id="imagePreview" class="preview" alt="Image preview">
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn" id="cancelBtn">Cancel</button>
+          <button type="submit" class="btn primary">Save activity</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="lightbox" id="lightbox">
+    <button id="lightboxClose">×</button>
+    <img id="lightboxImage" alt="Full image">
+  </div>
+  <div class="toast" id="toast"></div>
+</body>
+</html>
